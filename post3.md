@@ -1,4 +1,4 @@
-# Going Live
+# Going Live 
 
 We've established why accessibility is important. We've picked the low-hanging
 fruit and cleared the fog. Now that we got a sense of the landscape before us,
