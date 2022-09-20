@@ -1,6 +1,10 @@
 # Going Live
 
-We've established why accessibility is important. We've picked the low-hanging fruit and cleared the fog. Now that we got a sense of the landscape before us, let's breathe some life into LiveBeats and get its real-time features working nicely with my screen reader.
+Imagine this: You're navigating a static website in the browser. You're not scanning around with your eyeballs, though; you're navigating the elements of the document using an input device (say, a keyboard), to tell a screen reader where it should start reading next, and you receive the content as the screen reader speaks it. Good so far? 
+
+Let's complicate the story a little. The website is now a web *app*. It has buttons or controls that may send you to another URL, or they may instigate a change to just part of the DOM. Hopefully, it's laid out so you can still find everything easily, everything behaves like what it claims to be, and nothing is lying about what it is.
+
+That's what we were aiming for when we [cleared the fog and picked low-hanging fruit](https://fly.io/blog/accessibility-clearing-the-fog/) in the LiveBeats UI. In the spirit of our random combo metaphor: We can see the landscape before us clearly. LiveBeats is made up of logical, well labeled parts, with well defined roles for sensible navigation and some semblance of interactivity. Now we're going to stretch a little higher up into the tree and get its real-time features working nicely with my screen reader.
 
 ## What lies ahead?
 
