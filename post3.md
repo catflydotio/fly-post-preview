@@ -20,7 +20,7 @@ Here are a few way in which real-time web apps usually don't measure up when tes
 
 In the web's traditional document-centric mode, clicking a link has standard consequences. It's a like pulling a book off the shelf. The browser makes a standard HTTP request and the server sends back an HTML payload to the browser. It's safe to have a screen reader read out the document title and its content as soon as it loads.
 
-Route changes in web apps aren't confined to any standard. They're generally not achieved by an HTML request and response, which means that the URL displayed in the browser, and all or part of the DOM, can get swapped without a screen reader noticing. When standards go out the window, accessibility often goes with them.
+Route changes in web apps aren't constrained to a standard behavior. They're generally not achieved by an HTML request and response, which means that the URL displayed in the browser, and all or part of the DOM, can get swapped without a screen reader noticing. When standards go out the window, accessibility often goes with them.
 
 Live state changes are another thing that can sneak past a screen reader in a real-time app. Status updates, chat messages, etc. pop in live over the wire, and different updates may need to be handled differently. So they'll need individual attention in order to make sure they're announced in the right way.
 
@@ -113,7 +113,7 @@ Let's make LiveBeats' connection status accessible using `role="alert"`. Here's 
 </p>
 ```
 
-Deciding which live region settings were appropriate was most of the work! An incoming chat message could probably afford to [wait for other announcements to finish](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-live), and maybe you don't even need to know every time another visits or leaves your playlist. In a music-player app, you really don't want too many status announcements interrupting the tunes.
+Deciding which live region settings were appropriate was most of the work! An incoming chat message could probably afford to [wait for other announcements to finish](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-live), and maybe you don't even need to know every time another user visits or leaves your playlist. In a music-player app, you really don't want too many status announcements interrupting the tunes.
 
 ## Ephemeral alerts
 
@@ -121,7 +121,7 @@ Live regions work well for the obvious case of reading content that changes some
 
 The solution here is an [off-screen live region specifically for announcements](https://stackoverflow.com/questions/50747587/announce-aria-live-text-change-despite-div-being-hidden).
 
-One step developers often miss with this kind of announcement is to clear the live region after a reasonable timeout--it's still hanging around the DOM after it's spoken, usually at the end, waiting to surprise screen reader users when they navigate to the bottom of the page.
+One step developers often miss with this kind of announcement is to clear the live region after a reasonable timeout&mdash;it's still hanging around the DOM after it's spoken, usually at the end, waiting to surprise screen reader users when they navigate to the bottom of the page.
  
 Slap a long `setTimeout` to give screen readers enough time to read the text; 15 seconds should be sufficient.
 
