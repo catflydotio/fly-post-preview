@@ -3,7 +3,7 @@
 Imagine this: You're navigating a static website in the browser. You're not
 scanning around with your eyeballs, though: you're navigating the elements of
 the document using say, a keyboard. You receive the content as the screen reader
-speaks it. Good so far? 
+speaks it. Good so far?
 
 Let's complicate the story a little. The website is now a web *app*. It probably
 has more interactive elements, like buttons and forms, because we're (probably)
@@ -15,14 +15,14 @@ That's what we were aiming for when we [cleared the fog and picked low-hanging
 fruit](https://fly.io/blog/accessibility-clearing-the-fog/) in the LiveBeats UI.
 In the spirit of our random combo metaphor: we can see the landscape before us
 clearly. LiveBeats is made up of logical, well-labeled parts, with well-defined
-roles for sensible navigation and some semblance of interactivity. 
+roles for sensible navigation and some semblance of interactivity.
 
 We're ready to embark on our new, accessible LiveBeats adventure. But we're not
 in the clear yet. Now we stretch a little higher up into the tree and get its
 real-time features working nicely with screen readers and other assistive
 technologies.
 
-## What lies ahead? 
+## What lies ahead?
 
 The web was never designed as an application platform. We've hacked around its
 limitations to get something resembling interactivity, but we're still working
@@ -67,7 +67,7 @@ out from under them.
 If you remove the page element your user is interacting with, the document may
 no longer be interactive without manually moving focus somewhere. I can't count
 how many times I've navigated to the top of a document to work around having the
-text or button I was interacting with simply vanish. 
+text or button I was interacting with simply vanish.
 
 Route changes and state announcements can both mess with focus if you don't take
 steps to prevent it. Don't even talk to me about modals. (Actually, we'll get
@@ -128,7 +128,7 @@ let Focus = {
 ...
 ```
 
-We start by finding our target element, then ensure that it is non-null. 
+We start by finding our target element, then ensure that it is non-null.
 
 Then we have to deal with the fact that `focus()` doesn't let you move the caret
 to whatever element you want. The element must be capable of accepting focus,
@@ -183,7 +183,7 @@ good page title equivalent. Excellent!
 Real-time apps often have state which changes in response to a variety of
 events. Some of these we'll want to know about as they happen. The most powerful
 tool for making these state changes accessible is the [ARIA live
-region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions). 
+region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
 
 Live regions give us knobs to control [how assertively their content is
 read](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-live),
@@ -256,6 +256,21 @@ is hidden to *you* doesn't mean assistive technologies can't see it.
 
 Slap a long `setTimeout` to give screen readers enough time to read the text; 15
 seconds should be sufficient. When the timeout expires, clear the text of the element containing the ephemeral announcement, or remove it entirely.
+
+## Logs
+
+A very common pattern in many web apps is a chronological log. Maybe you're
+displaying a series of chat messages, or an actual log from a remote system. In
+these scenarios, the screen reader should automatically read newly-added text
+without interrupting speech.
+
+The [`log`
+role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/log_role)
+is an easy way to meet both requirements. `role="log` implies
+`aria-level="polite"`, and is a more semantic way to indicate that a given area
+of the page should speak automatically when new text is added. To see this role
+in action, [launch a LiveBook instance on Fly](https://fly.io/launch/livebook) with a
+screen reader running. When the VM boots, new log messages will be automatically read.
 
 ## Conclusion
 
