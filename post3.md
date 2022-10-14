@@ -41,21 +41,20 @@ tested for accessibility.
 In the web's traditional document-centric mode, clicking a link has standard
 consequences. It's a like pulling a book off the shelf. The browser makes a
 standard HTTP request and the server sends back an HTML payload to the browser.
-The screen reader then presents the title of the page when it loads. You grab a
+The screen reader presents the title of the page when it loads. You grab a
 book, the screen reader confirms your choice. There's nothing surprising here.
 
 Route changes in web apps aren't constrained to a standard behavior. They're
 generally not achieved by an HTML request and response, which means that the URL
 displayed in the browser, and all or part of the DOM, can get swapped without a
-screen reader noticing. When standards go out the window, accessibility often
-goes with them.
+screen reader noticing. When standards go out the window, accessibility has a tendency to go with them!
 
 Live state changes are another thing that can sneak past a screen reader in a
 real-time app. Status updates, chat messages, etc. pop in live over the wire,
 and different updates may need to be handled differently. The screen reader has
 no context for what these document changes actually mean, so they'll need
 individual attention to ensure they're announced in correctly. Also, while it
-may be OK for some state changes to assertively announce themselves, others
+may be OK for some state changes to announce themselves assertively, others
 should be more polite and not interrupt existing speech.
 
 However you're changing the DOM, be mindful of the focus. Live-patching the DOM
@@ -70,15 +69,14 @@ how many times I've navigated to the top of a document to work around having the
 text or button I was interacting with simply vanish.
 
 Route changes and state announcements can both mess with focus if you don't take
-steps to prevent it. Don't even talk to me about modals. (Actually, we'll get
-into the complexity of modals next time. Spoiler: those aren't even easily
+steps to prevent it. Don't even talk to me about modals. (Actually, we're going to talk about tricksy modals next time. Spoiler: those aren't even easily
 interactive unless focus is intentionally moved into them.)
 
 ## Where to? (Routing)
 
 Let's turn our attention to how this plays out in LiveBeats. LiveBeats is a
 Phoenix LiveView app, using WebSockets for client-server communication. Since we
-don't have a standard to tell us how to get this to work with a screen reader,
+don't have a standard to tell us how to get routing to work with a screen reader,
 we're free to choose a "standard" pattern that suits us. And we should.
 
 If we've transitioned to a new page, we've almost certainly swapped out a huge
@@ -98,13 +96,12 @@ for LiveBeats.
 I want to stop here and emphasize that here's no one correct solution for
 accessible routing. Someone with a cognitive disability might find sudden focus
 jumps hard to follow. This is why accessibility testing is crucial. Please don't
-assume that my advice is the final authority on the matter.
+take my advice as the final authority on the matter.
 
 In LiveBeats, the content that changes when we visit a new route [is
 encapsulated within the `<main/>`
 element](https://fly.io/blog/accessibility-clearing-the-fog/). Then LiveBeats
-adopts the convention that the first `<h1/>` child of `<main/>` is both a
-suitable route title and focus target. As a fallback, if no `<h1/>` is present,
+adopts the convention that the first `<h1/>` child of `<main/>` works well as both route title and focus target. As a fallback, if no `<h1/>` is present,
 focus goes directly to `<main/>`. Ideally this never happens, but as developers,
 we're all too aware how often things that should never happen actually *do*.
 
@@ -180,7 +177,7 @@ good page title equivalent. Excellent!
 
 ## What's up? (State changes)
 
-Real-time apps often have state which changes in response to a variety of
+Real-time apps often have state that changes in response to a variety of
 events. Some of these we'll want to know about as they happen. The most powerful
 tool for making these state changes accessible is the [ARIA live
 region](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions).
@@ -201,8 +198,7 @@ is a shorthand for live region settings for important, usually time-sensitive,
 information. Changes to such an area will be read out immediately, cutting off
 any existing screen reader speech if necessary.
 
-"Cutting off any existing screen reader speech if necessary" means exactly that.
-With great power comes great responsibility. I see web developers use live
+"Cutting off any existing screen reader speech if necessary" is a great power that comes with great responsibility. I see web developers use live
 regions for *any* section of the page that changes. Carousels and slideshows are
 the most common abuse. Please only use live regions for changes that absolutely
 need to be reported immediately. Incoming alert? Great. Ad banners? Not so much.
@@ -234,11 +230,11 @@ announcements interrupting the tunes.
 
 ## Ephemeral alerts
 
-Live regions work well for the obvious case of reading content that changes
+Live regions work well for the obvious case of reading content that changes,
 somewhere in the DOM. But how do you present updates and alerts that *aren't*
 associated with an area on the page? Say someone's post is liked or favorited in
 your new fancy social networking app. You may never display the text "Alice
-likes your post," but you might still want to make that accessible. Or maybe you
+likes your post," but you may still want to make that accessible. Or maybe you
 convey something visually with a symbol but no text; say, a greyed-out icon for
 a dropped connection; and want to speak an alert whenever the icon's color
 changes.
@@ -254,13 +250,15 @@ work around loss of focus issues by moving to the top or bottom of the page,
 this is a lot more common than you might expect. And just because a DOM element
 is hidden to *you* doesn't mean assistive technologies can't see it.
 
-Slap a long `setTimeout` to give screen readers enough time to read the text; 15
+Slap on a long `setTimeout` to give screen readers enough time to read the text; 15
 seconds should be sufficient. When the timeout expires, clear the text of the element containing the ephemeral announcement, or remove it entirely.
 
 ## Logs
 
-A very common pattern in many web apps is a chronological log. Maybe you're
-displaying a series of chat messages, or an actual log from a remote system. In
+We haven't encountered every possible pattern in LiveBeats, of course. 
+
+A very common pattern in many web apps is a chronological log, like 
+a series of chat messages, or, you know, an actual log from a remote system. In
 these scenarios, the screen reader should automatically read newly-added text
 without interrupting speech.
 
@@ -272,11 +270,17 @@ of the page should speak automatically when new text is added. To see this role
 in action, [launch a LiveBook instance on Fly](https://fly.io/launch/livebook) with a
 screen reader running. When the VM boots, new log messages will be automatically read.
 
+Speaking of things we don't have in LiveBeats, here's a fun one: the 
+[`marquee` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/marquee_role)
+defines a live region whose `aria-live` value is `off`. Now this looks like a good 
+place for that ad carousel. Its role identifies it as a region with contents that 
+change frequently, but it won't interrupt either my screen reader or my train of 
+thought every time it happens.
+
 ## Conclusion
 
 We've done a *lot* to make LiveBeats more screen reader accessible, but there's
 one piece missing. Uploading songs opens a modal dialog, and these are,
-unfortunately, not very accessible without quite a bit of effort. Making these
-accessible draws on just about every technique we've covered so far, so stick
+unfortunately, not very accessible without quite a bit of effort. In fact, it draws on just about every technique we've covered so far, so stick
 around! And, as always, thanks for taking the time to learn more about
 accessibility.
